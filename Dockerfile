@@ -15,12 +15,16 @@ RUN cd funcx && pip install funcx_sdk/ funcx_endpoint/ && cd ..
 RUN pip install xtract_sdk
 
 # RUN mkdir /tmp
-# RUN mkdir /tmp/jobs
-# RUN mkdir /tmp/jobs/10451630
+RUN mkdir /tmp/jobs
+RUN mkdir /tmp/jobs/10451630
 RUN wget https://repo1.maven.org/maven2/org/apache/tika/tika-server/1.24/tika-server-1.24-bin.tgz && tar -xzf tika-server-1.24-bin.tgz
 RUN wget https://repo1.maven.org/maven2/org/apache/tika/tika-server/1.24/tika-server-1.24.jar.md5
 RUN mv /tika-server-1.24-bin/tika-server.jar /tmp
+RUN cp /tmp/tika-server.jar /tmp/jobs/10451630/tika-server.jar
+
 RUN mv /tika-server-1.24.jar.md5 /tmp/tika-server.jar.md5
+RUN cp /tmp/tika-server.jar.md5 /tmp/jobs/10451630/tika-server.jar.md5
+
 ENV TIKA_SERVER_JAR=/tmp/tika-server.jar
 
 ENV container_version=tika0
