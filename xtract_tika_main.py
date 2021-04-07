@@ -6,7 +6,9 @@ from tika import parser
 from queue import Queue
 import threading
 import json
-from random import randint
+# from random import randint
+import argparse
+
 
 class TikaParser:
 
@@ -22,8 +24,8 @@ class TikaParser:
 
         while not self.shared_dir_q.empty():
 
-
             item = self.shared_dir_q.get()
+            # exit()
 
             try:
                 # opening pdf file
@@ -31,6 +33,8 @@ class TikaParser:
                                   # Note that this is faster than simply 'not' sleeping (or sleeping < 10ms).
 
                 t_ext_start = time.time()
+                # print(f"Item: {item}")
+                # print(type(item))
                 parsed_pdf = parser.from_file(item)
             except IsADirectoryError as e:
                 print("Actually a directory. Skipping!")
@@ -68,6 +72,11 @@ class TikaParser:
 
         print("Phase 2: Crawling the files. Creating shared file list...")
         # First create full list of files in directory
+        print(f"Dir name: {dir_name}")
+        print(f"Pct to Transfer: {pct_to_transfer}")
+        print(f"Num threads: {num_thr}")
+
+
         all_subdirs = os.listdir(dir_name)
 
         for subdir in all_subdirs:
@@ -97,10 +106,16 @@ class TikaParser:
 
 
 if __name__ == '__main__':
-    # TODO: move a bunch of these to the commandline.
-    dir_to_proc = "/project2/chard/skluzacek/data_to_process"
+    p = argparse.ArgumentParser(description='Add args to Tika extraction run. ')
+    p.add_argument('--num_threads', metavar='N', required=True)
+    p.add_argument('--read_dir', metavar='R', required=True)
+    p.add_argument('--write_dir', metavar='W', required=True)
+    # dir_to_proc = "/project2/chard/skluzacek/data_to_process"
     # dir_to_proc = '/Users/tylerskluzacek/Desktop'
     # write_dir = '/Users/tylerskluzacek/Desktop/mdata'
-    write_dir = '/project2/chard/skluzacek/mdata'
-    tp = TikaParser(write_path=write_dir)
-    tp.extract_tika(dir_to_proc, pct_to_transfer=0, num_thr=27)
+    # write_dir = '/project2/chard/skluzacek/mdata'
+    args = p.parse_args()
+    print(args.write_dir)
+    tp = TikaParser(write_path=str(args.write_dir))
+    print(int(args.num_threads))
+    tp.extract_tika(str(args.read_dir), pct_to_transfer=0, num_thr=int(args.num_threads))
