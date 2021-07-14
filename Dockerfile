@@ -17,13 +17,17 @@ ENV JAVA_HOME=/opt/java/openjdk \
 RUN pip3 install --upgrade pip requests
 RUN pip3 install tika
 
+# Download Tika files
+RUN wget https://repo1.maven.org/maven2/org/apache/tika/tika-server/1.24/tika-server-1.24-bin.tgz && tar -xzf tika-server-1.24-bin.tgz
+RUN wget https://repo1.maven.org/maven2/org/apache/tika/tika-server/1.24/tika-server-1.24.jar.md5
+RUN mv /tika-server-1.24-bin/tika-server.jar /tmp
+RUN mv /tika-server-1.24.jar.md5 /tmp/tika-server.jar.md5
+
 # Copy local files
 COPY xtract_tika_main.py /
-COPY tika-server.jar /tmp
-COPY tika-server.jar.md5 /tmp
 
 # Copy directory of data
-# COPY data /data
+COPY data /data
 
 # Make directory for JSON files
 RUN mkdir /output

@@ -19,5 +19,6 @@ def save_output(rootdir):
             output = parse_file(filepath)
             with open(f'output/{filename}.json', 'w') as f:
                 json.dump(output, f)  
+parse_file('coviddata2021-02-13.csv')
 
 
