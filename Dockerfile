@@ -1,36 +1,31 @@
-FROM rappdw/docker-java-python:openjdk1.8.0_171-python3.6.6
+# Linux
+FROM alpine:3.7
 
-RUN python3 -m pip install tika
-# RUN pip install tika
+# Java
+RUN apk update \
+&& apk upgrade \
+&& apk add --no-cache bash \
+&& apk add --no-cache --virtual=build-dependencies unzip \
+&& apk add --no-cache curl \
+&& apk add --no-cache openjdk8-jre \
+&& apk add python3 python3-dev gcc g++ gfortran musl-dev libxml2-dev libxslt-dev
 
+ENV JAVA_HOME=/opt/java/openjdk \
+    PATH="/opt/java/openjdk/bin:$PATH"
+
+# Install packages
+RUN pip3 install --upgrade pip requests
+RUN pip3 install tika
+
+# Copy local files
 COPY xtract_tika_main.py /
-COPY king-cholera.jpeg /
-# TODO: COPY IN A TEST FILE.
+COPY tika-server.jar /tmp
+COPY tika-server.jar.md5 /tmp
 
-RUN pip install --upgrade pip
-RUN pip install -U setuptools
-RUN git clone -b tyler-midway-improved https://github.com/funcx-faas/funcx.git
-# RUN cd funcx && echo | ls
-RUN cd funcx && pip install funcx_sdk/ funcx_endpoint/ && cd ..
-RUN pip install xtract_sdk
+# Copy directory of data
+# COPY data /data
 
-# RUN mkdir /tmp
-# RUN mkdir /tmp/jobs
-# RUN mkdir /tmp/jobs/10451630
-RUN mkdir /tika-things
-RUN wget https://repo1.maven.org/maven2/org/apache/tika/tika-server/1.24/tika-server-1.24-bin.tgz && tar -xzf tika-server-1.24-bin.tgz
-RUN wget https://repo1.maven.org/maven2/org/apache/tika/tika-server/1.24/tika-server-1.24.jar.md5
-RUN mv /tika-server-1.24-bin/tika-server.jar /tika-things
-# RUN cp /tmp/tika-server.jar /tmp/jobs/10451630/tika-server.jar
+# Make directory for JSON files
+RUN mkdir /output
 
-RUN mv /tika-server-1.24.jar.md5 /tika-things/tika-server.jar.md5
-# RUN cp /tmp/tika-server.jar.md5 /tmp/jobs/10451630/tika-server.jar.md5
-
-# RUN export TIKA_SERVER_JAR=/tika-things
-ENV TIKA_SERVER_JAR=file:///tika-things/tika-server.jar
-
-ENV container_version=tika0
-
-
-# RUN python -c "exec(\"from tika import parser\nparsed_pdf = parser.from_file('/king-cholera.jpeg')\nprint(parsed_pdf)\")"
-# RUN python -c "exec(\"from tika import parser\nparsed_pdf = parser.from_file('/king-cholera.jpeg')\nprint(parsed_pdf)\")"
+CMD [ "python3", "./xtract_tika_main.py" ]
