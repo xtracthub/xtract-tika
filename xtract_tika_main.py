@@ -1,5 +1,6 @@
 import tika
 import time
+from tika import parser
 
 tika.initVM()
 # Unsure what these do
@@ -20,5 +21,5 @@ def execute_extractor(filename):
 def run_tika(file_path):
     """
     """
-    meta = tika.parser.from_file(file_path)
+    meta = parser.from_file(file_path)
     return meta
