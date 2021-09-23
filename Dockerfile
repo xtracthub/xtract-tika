@@ -25,11 +25,7 @@ RUN mv /tika-server-1.24.jar.md5 /tmp/tika-server.jar.md5
 
 # Copy local files
 COPY xtract_tika_main.py /
-
-# Copy directory of data
-COPY data /data
-
-# Make directory for JSON files
-RUN mkdir /output
+COPY local_test.py /
+COPY Dockerfile /
 
 CMD [ "python3", "./xtract_tika_main.py" ]

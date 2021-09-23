@@ -2,10 +2,8 @@ import tika
 import time
 from tika import parser
 
-tika.initVM()
-# Unsure what these do
-# tika.TikaClientOnly = True
-# tika.TIKA_SERVER_JAR="file:////tika-server.jar"
+
+tika.TIKA_SERVER_JAR="file:////tika-server.jar"
 
 
 def execute_extractor(filename):
