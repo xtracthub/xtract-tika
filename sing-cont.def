@@ -1,0 +1,37 @@
+Bootstrap: docker
+From: alpine:3.7
+
+# %setup 
+#     mkdir /tika-tester
+
+%files
+tika-python /
+
+%post
+    mkdir /tika-tester
+    apk update \
+    && apk upgrade \
+    && apk add --no-cache bash \
+    && apk add --no-cache --virtual=build-dependencies unzip \
+    && apk add --no-cache curl \
+    && apk add --no-cache openjdk8-jre \
+    && apk add python3 python3-dev gcc g++ gfortran musl-dev libxml2-dev libxslt-dev
+
+    # Install packages
+    pip3 install --upgrade pip requests
+    # pip3 install tika
+    
+    cd /tika-python && pip3 install . && cd ..
+
+    # Download Tika files
+    wget https://repo1.maven.org/maven2/org/apache/tika/tika-server/1.24/tika-server-1.24-bin.tgz && tar -xzf tika-server-1.24-bin.tgz
+    wget https://repo1.maven.org/maven2/org/apache/tika/tika-server/1.24/tika-server-1.24.jar.md5
+    mv /tika-server-1.24-bin/tika-server.jar /tika-tester
+    mv /tika-server-1.24.jar.md5 /tika-tester/tika-server.jar.md5
+
+%files
+    xtract_tika_main.py /
+
+%environment
+    export JAVA_HOME=/opt/java/openjdk
+    export PATH="/opt/java/openjdk/bin:$PATH"    
