@@ -29,6 +29,8 @@ tika-python /
     mv /tika-server-1.24-bin/tika-server.jar /tika-tester
     mv /tika-server-1.24.jar.md5 /tika-tester/tika-server.jar.md5
 
+    # pip3 install funcx
+
 %files
     xtract_tika_main.py /
 
