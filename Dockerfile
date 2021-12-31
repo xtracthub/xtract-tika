@@ -26,8 +26,10 @@ RUN mv /tika-server-1.24.jar.md5 /tika-tester/tika-server.jar.md5
 
 # Copy local files
 COPY xtract_tika_main.py /
-COPY run.sh /
-COPY build.sh / 
 
+ENV CONTAINER_VERSION=1.0 
+RUN pip install funcx funcx_endpoint 
+RUN pip install xtract_sdk==0.0.7a2
+RUN pip uninstall globus_sdk -y && pip install globus_sdk==2.0.1
 
 CMD [ "python3", "./xtract_tika_main.py" ]

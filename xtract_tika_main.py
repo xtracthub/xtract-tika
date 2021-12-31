@@ -30,6 +30,11 @@ def save_output(rootdir):
                 json.dump(output, f)  
 # parse_file('coviddata2021-02-13.csv')
 
+
+def execute_extractor(path):
+    get_data = parse_file(path)
+    return get_data
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument('--path')
