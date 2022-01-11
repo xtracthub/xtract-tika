@@ -29,7 +29,8 @@ COPY xtract_tika_main.py /
 
 ENV CONTAINER_VERSION=1.0 
 RUN pip install funcx funcx_endpoint 
-RUN pip install xtract_sdk==0.0.7a2
+RUN pip install xtract_sdk==0.0.7a11
 RUN pip uninstall globus_sdk -y && pip install globus_sdk==2.0.1
+RUN pip install numpy
 
 CMD [ "python3", "./xtract_tika_main.py" ]
